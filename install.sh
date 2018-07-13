@@ -1,9 +1,10 @@
 #!/bin/sh
-#download Gitlab Repo for betanet
-curl -o /usr/local/bin/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
 
 #assign user rights to /usr/local/bin
 sudo chown -R $(whoami) /usr/local/bin
+
+#download Gitlab Repo for betanet
+curl -o /usr/local/bin/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
 
 #make opam executable
 sudo chmod a+x /usr/local/bin/opam
