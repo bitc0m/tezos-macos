@@ -1,27 +1,89 @@
 #!/bin/sh
 
-#assign user rights to /usr/local/bin
-sudo mkdir /usr/local/lib /usr/local/include
-sudo /usr/sbin/chown -R $(whoami):admin /usr/local/bin /usr/local/share /usr/local/lib /usr/local/include /usr/local/sbin
+WORK=$HOME/Builds/build-essential
+PREFIX=$HOME/local
+export PATH="$PREFIX/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 
-#check for pkg-conf
-if ! pkgconf_loc="$(type -p "pkg-config")" || [[ -z $pkgconf_loc ]]; then 
-  tar -zxvf <(curl -sL https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz) &>/dev/null && mv ./pkg-config-0.29.2 ./pkg-conf 
-  (cd ./pkg-conf && ./configure --with-internal-glib && make && make install)
-fi
+mkdir -p $WORK/src
 
-#check for gmp
-gmp_h=/usr/local/include/gmp.h
-if [ ! -f $gmp_h ]; then 
-  tar -xf <(curl -sL https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz) &>/dev/null && mv ./gmp-6.1.2 ./gmp
-  (cd ./gmp && ./configure --with-internal-glib &>/dev/null && make &>/dev/null && make install)
-fi
+cd $WORK/src
+curl -O -L ftp://ftp.gnu.org/gnu/m4/m4-latest.tar.xz
+curl -O -L ftp://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.xz
+curl -O -L ftp://ftp.gnu.org/gnu/automake/automake-1.16.tar.xz
+curl -O -L ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.xz
+curl -O -L https://gmplib.org/download/gmp/gmp-6.1.2.tar.xz
+curl -O -L https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz
+curl https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin > $PREFIX/opam
 
-#download Gitlab Repo for betanet
-curl -o /usr/local/bin/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
+cd $WORK
+
+# m4
+tar xf src/m4-*
+cd m4-*
+./configure\
+    --prefix=$PREFIX
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr m4-*
+
+# autoconf
+tar xf src/autoconf-2*
+cd autoconf-2*
+./configure\
+    --prefix=$PREFIX\
+    --disable-debug
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr autoconf-2*
+
+# automake
+tar xf src/automake-*
+cd automake-*
+./configure\
+    --prefix=$PREFIX
+    --disable-debug
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr automake-*
+
+# libtool
+tar xf src/libtool-*
+cd libtool-*
+./configure\
+    --prefix=$PREFIX
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr libtool-*
+
+# gmp
+tar xf src/gmp-*
+cd gmp-*
+./configure\
+    --prefix=$PREFIX
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr gmp-*
+
+# pkg-conf
+tar zxvf src/pkg-config-*
+cd pkg-config-*
+./configure --with-internal-glib\
+    --prefix=$PREFIX
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr pkg-config-*
+
+# hidapi
+unzip src/hidapi-*
+cd hidapi-*\mac
+./configure \
+    --prefix=$PREFIX
+make clean && make -j4 && make install-strip
+cd $WORK
+rm -fr hidapi-*
 
 #make opam executable
-sudo chmod a+x /usr/local/bin/opam
+sudo chmod a+x $PREFIX/opam
 
 #initiate Opam
 opam init -y --compiler=4.06.1
