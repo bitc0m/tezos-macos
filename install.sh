@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #assign user rights to /usr/local/bin
-sudo chown -R $(whoami) /usr/local/bin
+sudo /usr/sbin/chown -R $(whoami) /usr/local/bin
 
 #download Gitlab Repo for betanet
 curl -o /usr/local/bin/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
