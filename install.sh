@@ -1,10 +1,7 @@
 #!/bin/sh
 PREFIX=/usr/local/bin
-
-mkdir -p $WORK/src
-
-cd $PREFIX
-curl https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin > $PREFIX/opam
+sudo chown -R $(whoami):admin $PREFIX
+curl -o $PREFIX/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
 
 # m4
 brew install m4
@@ -41,14 +38,12 @@ sudo chmod a+x $PREFIX/opam
 $PREFIX/opam init -y --compiler=4.06.1
 
 #evalute configuration environment
+eval $(opam env)
 eval `opam config env`
 
 git clone -b betanet https://gitlab.com/tezos/tezos.git & wait
 { sleep 5; echo waking up after 5 seconds; } & wait
 cd tezos
-
-#install packages if not already
-sudo apt-get install gmp
 
 #build dependencies
 make build-deps
