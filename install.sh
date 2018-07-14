@@ -39,7 +39,6 @@ $PREFIX/opam init -y --compiler=4.06.1
 
 #evalute configuration environment
 eval $(opam env)
-eval `opam config env`
 
 git clone -b betanet https://gitlab.com/tezos/tezos.git & wait
 { sleep 5; echo waking up after 5 seconds; } & wait
