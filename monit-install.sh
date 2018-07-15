@@ -10,5 +10,5 @@ tar xf monit-*
 cd monit-*
 ./configure --without-ssl\
     --prefix=$PREFIX
-make clean && make -j4 && make install-strip >> /dev/null
+make clean && make -j4 && make install-strip
 rm -fr monit-*
