@@ -1,0 +1,30 @@
+#!/bin/bash
+WORK=$HOME/tezos
+PID_FILE=$WORK/teznode.pid
+
+cd $WORK
+
+start() {
+       touch $PID_FILE
+       nohup ./tezos-node run --rpc-addr 127.0.0.1 --connections 10 &
+       PID=$(ps aux | grep tezos-node | grep -v grep | awk '{print $2}')
+       echo "Starting tezos-node with PID $PID"
+       echo $PID > $PID_FILE
+}
+stop () {
+       pkill tezos-node
+       rm $PID_FILE
+       echo "Stopping teznode"
+}
+
+case $1 in
+    start)
+       start
+       ;;
+    stop)
+       stop
+       ;;
+     *)
+       echo "Commands: teznode {start|stop}" ;;
+esac
+exit 0
