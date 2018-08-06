@@ -2,6 +2,9 @@
 PREFIX=/usr/local/bin
 sudo chown -R $(whoami):admin $PREFIX
 
+#libev
+brew install libev
+
 # m4
 brew install m4
 brew link m4
