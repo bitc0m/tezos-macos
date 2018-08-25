@@ -1,7 +1,9 @@
 #!/bin/sh
 PREFIX=/usr/local/bin
 sudo chown -R $(whoami):admin $PREFIX
-curl -o $PREFIX/opam -L https://github.com/ocaml/opam/releases/download/2.0.0-rc3/opam-2.0.0-rc3-x86_64-darwin
+
+#download copy of linux opam 2.0.0 (RC4 final) build and save as /usr/local/bin/opam
+/usr/bin/curl "https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh" | bash -s
 
 # m4
 brew install m4
@@ -30,6 +32,9 @@ brew link pkg-config
 # hidapi
 brew install hidapi
 brew link hidapi
+
+# libevent
+brew install libevent
 
 #make opam executable
 sudo chmod a+x $PREFIX/opam
